@@ -7,6 +7,7 @@ from natasha import (
     NewsSyntaxParser,
     MorphVocab
 )
+from tqdm import tqdm
 
 def text_processing():
     ''' Обработка текстов '''
@@ -21,8 +22,8 @@ def text_processing():
         texts = json.JSONDecoder().decode(fp.read())
     # Сама обработка
     words_dict = {}
-    for text_id, text in enumerate(texts):
-        doc = Doc(text['text'])
+    for text_id, text in tqdm(enumerate(texts)):
+        doc = Doc(". ".join(text['text'].split(".")))
         doc.segment(segmenter)
         doc.tag_morph(morph_tagger)
         doc.parse_syntax(syntax_parser)
@@ -55,3 +56,5 @@ def make_corpus_file():
     texts = text_processing()
     with open('corpus.json', 'w') as fp:
         json.dump(texts, fp)
+
+make_corpus_file()
